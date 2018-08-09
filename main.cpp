@@ -184,6 +184,8 @@ void checkTable(){ //checks if database table "inventory" exists, if not it crea
     char *sql;
     bool result;
     const char* data = "Callback function called";
+    char sqlStat[] = "WHERE EXISTS (SELECT barcode FROM inventory);";
+    char *pointSql = &sqlStat[0];
     rc = sqlite3_open("inventory.db", &db);
 
     if( rc ){
@@ -191,12 +193,13 @@ void checkTable(){ //checks if database table "inventory" exists, if not it crea
         sqlite3_close(db);
     }else{
         fprintf(stderr, "Database Connection Established..\n");
-        //result = sqlite3_exec(db*,const char "WHERE EXISTS (SELECT barcode FROM inventory)",NULL,NULL,NULL);
+        result = sqlite3_exec(db,pointSql,NULL,0,&zErrMsg);
 //        cout<< typeid(sqlite3_exec(db* ,"WHERE EXISTS (SELECT barcode FROM inventory)")).name();
         if (result){
             printf("Table inventory Found in Database..");
         }
         else{
+            printf(zErrMsg);
 //            sqlite3_exec(db*, "CREATE TABLE inventory(column1 int,column2 varchar(200),column3 varchar(200),)");
         }
         }
